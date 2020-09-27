@@ -6,7 +6,6 @@ Work in progress
 
 ## TODO
  
-  - Separate list/graph in different files
   - remove useless functions
   - rename some graph functions
   - add comments
