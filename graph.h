@@ -1,16 +1,15 @@
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
+/**
+ * \file graph.h
+ * \author Anthony BERTRAND
+ * \brief header for graph algorithm
+ * \version 0.1
+ * \date 27/09/20
+ **/
 
-//----------------------------struct list------------------------------------
+#ifndef GRAPH_H
+#define GRAPH_H
 
-typedef struct link
-{
-int v;
-struct link *next;
-} Link, *List;
-
-typedef enum{false, true}Booleen;
+#include "list.h"
 
 //---------------------------struct graphe-------------------------------------
 
@@ -21,17 +20,7 @@ typedef struct link_g
 	struct link_g *next;
 }Link_g, *Graph;
 
-//-----------------------------fct liste----------------------------------------
-List insert_head(List l, int x);
-List insert(List l, int x);
-List remove_head(List l);
-List remove_l(List l, int x);
-int nbElt(List l);
-Booleen empty(List l);
-int head(List l);
-Booleen appartient(List l, int x);
-List copie(List l);
-void display_list(List l);
+
 
 //------------------------------fct graphe----------------------------------------
 
@@ -50,3 +39,5 @@ int de(Graph g, int x);
 int di(Graph g, int x);
 void export_graph(Graph g);
 void global(void);
+
+#endif
