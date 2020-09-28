@@ -24,19 +24,19 @@ typedef struct link_g
 
 //------------------------------fct graphe----------------------------------------
 
-Graph adjst(Graph g, int x);
-Graph adjs(Graph g, int x);
-Graph adja(Graph g, int x, int y);
-Graph supa(Graph g, int x, int y);
-Graph supst(Graph g);
+Graph add_link_head(Graph g, int x);
+Graph add_link(Graph g, int x);
+Graph add_vectice(Graph g, int x, int y);
+Graph sup_vectice(Graph g, int x, int y);
+Graph sup_head(Graph g);
 Graph sups(Graph g, int x);
 //Booleen esg(Graph g, int x);
-Booleen exa(Graph g, int x, int y);
+Booleen is_vectice(Graph g, int x, int y);
 Booleen emptyg(Graph g);
-Booleen exs(Graph g, int x);
-List esucc(Graph g, int x);
-int de(Graph g, int x);
-int di(Graph g, int x);
+Booleen is_edge(Graph g, int x);
+List list_vectice(Graph g, int x);
+int n_vect_in(Graph g, int x);
+int n_vect_out(Graph g, int x);
 void export_graph(Graph g);
 void global(void);
 

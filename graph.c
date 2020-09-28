@@ -9,8 +9,8 @@
 
 #include "graph.h"
 
-
-Graph adjst(Graph g, int x)
+//ajoute un link en tete de graph
+Graph add_link_head(Graph g, int x)
 {
 	Link_g *m;
 	m = (Link_g*)malloc(sizeof(Link_g));
@@ -25,22 +25,24 @@ Graph adjst(Graph g, int x)
 	return m;
 }
 
-Graph adjs(Graph g, int x)
+//ajoute le link en fonction de la valeur du sommet (ordre croissant)
+Graph add_link(Graph g, int x)
 {
 	if (emptyg(g))
-		return adjst(g, x);
+		return add_link_head(g, x);
 	if(x < g->v)
-		return adjst(g, x);
+		return add_link_head(g, x);
 	if(x == g->v)
 		return g;
-	g->next = adjs(g->next, x);
+	g->next = add_link(g->next, x);
 	return g;
 }
 
-Graph adja(Graph g, int x, int y)
+//ajoute l'arrete x->y (x et y doivent tous les 2 exister au préalable)
+Graph add_vectice(Graph g, int x, int y)
 {
 	Graph aux;
-	if (!exs(g, x) || !exs(g, y))
+	if (!is_edge(g, x) || !is_edge(g, y))
 		return g;
 	aux = g;
 	while(aux->v != x)
@@ -49,10 +51,11 @@ Graph adja(Graph g, int x, int y)
 	return g;
 }
 
-Graph supa(Graph g, int x, int y)
+//supprime l'arrete x->y
+Graph sup_vectice(Graph g, int x, int y)
 {
 	Link_g *m;
-	if(!exa(g, x, y))
+	if(!is_vectice(g, x, y))
 		return g;
 	m = g;
 	while(m->v != x)
@@ -61,7 +64,8 @@ Graph supa(Graph g, int x, int y)
 	return g;
 }
 
-Graph supst(Graph g)
+//supprime le 1er link du graphe
+Graph sup_head(Graph g)
 {
 	Link_g *m;
 	if (emptyg(g))
@@ -75,16 +79,22 @@ Graph supst(Graph g)
  	return g;
 }
 
+//supprime le sommet x ainsi que toutes les arretes entrantes/sortantes
+//(je crois, à verifier. Notamment le 2e if...)
+//veut le transformer en une fct qui fait ce que je dis plus haut
 Graph sups(Graph g, int x)
 {
-	if(!exs(g, x)) return g;
-	if(di(g, x) != 0 || de(g, x) != 0) return g;
-	if(x == g->v) return supst(g);
+	if(!is_edge(g, x)) return g;
+	if(n_vect_out(g, x) == 0 && n_vect_in(g, x) == 0) return g;
+	if(x == g->v) return sup_head(g);
+
+	if(is_vectice(g, g->v, x)) return sup_vectice(g, g->v, x);
 	g->next = sups(g->next, x);
 	return g;
 }
 
-Booleen exs(Graph g, int x)
+//return true si le sommet existe
+Booleen is_edge(Graph g, int x)
 {
 	if(emptyg(g))
 		return false;
@@ -92,18 +102,21 @@ Booleen exs(Graph g, int x)
 		return false;
 	if(x == g->v)
 		return true;
-	return exs(g->next, x);
+	return is_edge(g->next, x);
 }
 
-Booleen exa(Graph g, int x, int y)
+
+//return true si l'arrete x->y existe
+Booleen is_vectice(Graph g, int x, int y)
 {
-	if(!exs(g, x) || exs(g, y))
+	if(!is_edge(g, x) || !is_edge(g, y))
 		return false;
 	while(g->v != x)
 		g = g->next;
-	return appartient(g->l, x);
+	return appartient(g->l, y);
 }
 
+//return true si le graphe g est vide
 Booleen emptyg(Graph g)
 {
 	if(g == NULL)
@@ -116,9 +129,10 @@ Booleen emptyg(Graph g)
 	return appartient(esg(g, x), x);
 }*/
 
-List esucc(Graph g, int x)
+//renvoie la liste des arretes partant de x
+List list_vectice(Graph g, int x)
 {
-	if(!exs(g, x))
+	if(!is_edge(g, x))
 	{
 		printf("ce sommet n'existe pas\n");
 		return NULL;
@@ -128,16 +142,18 @@ List esucc(Graph g, int x)
 	return g->l;
 }
 
-int de(Graph g, int x)
+//return le nombre d'arretes partant de x
+int n_vect_in(Graph g, int x)
 {
-	if(!exs(g, x))
+	if(!is_edge(g, x))
 		return 0;
 	while(g->v != x)
 		g = g->next;
 	return nbElt(g->l);
 }
 
-int di(Graph g, int x)
+//return le nombre d'arretes entrant dans x
+int n_vect_out(Graph g, int x)
 {
 	int cpt = 0;
 	while(!emptyg(g))
@@ -149,6 +165,7 @@ int di(Graph g, int x)
 	return cpt;
 }
 
+//
 void export_graph(Graph g)
 {
 	int y;
@@ -156,7 +173,7 @@ void export_graph(Graph g)
 	Graph aux;
 	aux = g;
 	List l1;
-	flot = fopen("graphe.dot", "w");
+	flot = fopen("bin/graphe.dot", "w");
 	if (flot == NULL)
 	{
 		printf("pb ouverture fichier\n");
@@ -182,18 +199,19 @@ void export_graph(Graph g)
 	}
 	fprintf(flot, "}\n");
 	fclose(flot);
-	system("dot -Tpng graphe.dot -o graphe.png");
+	system("dot -Tpng bin/graphe.dot -o bin/graphe.png");
 }
 
 void global(void)
 {
 	Graph g = NULL;
-	g = adjs(g, 5);
-	g = adjs(g, 8);
-	g = adjs(g, 25);
-	g = adja(g, 5, 8);
-	g = adja(g, 5, 25);
-	g = adja(g, 8, 5);
-	g = adja(g, 25, 5);
+	g = add_link(g, 5);
+	g = add_link(g, 8);
+	g = add_link(g, 25);
+	g = add_vectice(g, 5, 8);
+	g = add_vectice(g, 5, 25);
+	g = add_vectice(g, 8, 5);
+	g = add_vectice(g, 25, 5);
+	g = sups(g, 5);
 	export_graph(g);
 }
