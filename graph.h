@@ -24,6 +24,7 @@ typedef struct link_g
 
 //------------------------------fct graphe----------------------------------------
 
+Link_g* create_link_g(int x);
 Graph add_link_head(Graph g, int x);
 Graph add_link(Graph g, int x);
 Graph add_vectice(Graph g, int x, int y);

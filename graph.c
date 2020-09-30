@@ -9,6 +9,21 @@
 
 #include "graph.h"
 
+Link_g* create_link_g(int x)
+{
+	Link_g *m;
+	m = (Link_g*)malloc(sizeof(Link_g));
+	if (m == NULL)
+	{
+		printf("pb malloc\n");
+		exit(1);
+	}
+	m->v = x;
+	m->l = NULL;
+	m->next = NULL;
+	return m;
+}
+
 //ajoute un link en tete de graph
 Graph add_link_head(Graph g, int x)
 {
