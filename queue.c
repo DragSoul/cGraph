@@ -60,7 +60,7 @@ void display_queue(Queue q)
 		printf("%d, ", q->edge.v);
 		q=q->next;
 	}
-	printf("%d\n", q->edge.next);
+	printf("%d\n", q->edge.v);
 }
 
 Link_g head_queue(Queue q)

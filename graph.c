@@ -180,14 +180,13 @@ int n_vect_out(Graph g, int x)
 	return cpt;
 }
 
-//
+//créer un fichier .dot puis le transforme en .png
 void export_graph(Graph g)
 {
 	int y;
 	FILE *flot;
 	Graph aux;
 	aux = g;
-	List l1;
 	flot = fopen("bin/graphe.dot", "w");
 	if (flot == NULL)
 	{
@@ -203,13 +202,11 @@ void export_graph(Graph g)
 	while(!emptyg(aux))
 	{
 		if(!empty(aux->l))
-			l1 = copie(aux->l);
-		while(!empty(l1))
-		{
-			y = head(l1);
-			l1 = remove_head(l1);
-			fprintf(flot, "%d->%d\n", aux->v, y);
-		}
+			while(!empty(aux->l))
+			{
+				fprintf(flot, "%d->%d\n", aux->v, aux->l->v);
+				aux->l = aux->l->next;
+			}
 		aux = aux->next;
 	}
 	fprintf(flot, "}\n");
@@ -217,16 +214,3 @@ void export_graph(Graph g)
 	system("dot -Tpng bin/graphe.dot -o bin/graphe.png");
 }
 
-void global(void)
-{
-	Graph g = NULL;
-	g = add_link(g, 5);
-	g = add_link(g, 8);
-	g = add_link(g, 25);
-	g = add_vectice(g, 5, 8);
-	g = add_vectice(g, 5, 25);
-	g = add_vectice(g, 8, 5);
-	g = add_vectice(g, 25, 5);
-	g = sups(g, 5);
-	export_graph(g);
-}
